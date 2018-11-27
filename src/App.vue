@@ -6,28 +6,14 @@
         <a href="//codepen.io/ettrics/pen/QbPEeg">Codepen</a>
       </h4>
     </section>
-    <Kanban :stages="statuses" :blocks="blocks" @update-block="updateBlock">
-      <div v-for="stage in statuses" :slot="stage" :key="stage">
-        <h2>
-          {{ stage }}
-          <a>+</a>
-        </h2>
-      </div>
-      <div v-for="item in blocks" :slot="item.id" :key="item.id">
-        <div>
-          <strong>id:</strong> {{ item.id }}
-        </div>
-        <div>
-          {{ item.title }}
-        </div>
-      </div>
+    <Kanban :buckets="buckets" @update-block="updateBlock">
     </Kanban>
   </div>
 </template>
 
 <script>
 import faker from 'faker';
-import { debounce } from 'lodash';
+import { debounce, random } from 'lodash';
 import Kanban from './components/Kanban';
 
 export default {
@@ -37,24 +23,27 @@ export default {
   },
   data() {
     return {
-      statuses: ['on-hold', 'in-progress', 'needs-review', 'approved'],
-      blocks: [],
-    };
+      buckets: {}
+    }
   },
-  mounted() {
+  created() {
+    var statuses = ['on-hold', 'in-progress', 'needs-review', 'approved']
+    statuses.forEach(status => {
+      this.buckets[status] = []
+    });
     for (let i = 0; i <= 10; i += 1) {
-      this.blocks.push({
+      let status = statuses[random(3)]
+      this.buckets[status].push({
         id: i,
-        status: this.statuses[Math.floor(Math.random() * 4)],
         title: faker.company.bs(),
       });
     }
   },
 
   methods: {
-    updateBlock: debounce(function (id, status) {
-      this.blocks.find(b => b.id === Number(id)).status = status;
-    }, 500),
+    updateBlock: function (id, status, index) {
+      console.log(id, status, index)
+    }
   },
 };
 </script>
