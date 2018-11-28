@@ -44,11 +44,17 @@
     },
 
     computed: {
-      allCards: function() {
+      allCards() {
         return Object.values(this.buckets)
           .reduce((arr1, arr2) => {
             return arr1.concat(arr2)
           })
+      }
+    },
+
+    methods: {
+      getCard(id) {
+        return this.allCards.find(card => card.id == id)
       }
     },
 
@@ -71,7 +77,7 @@
           // iterate over card elements in bucket to assign corresponding card object an order
           var i = 0
           Array.from(targetUl.children).forEach(cardLi => {
-            vue.allCards.find(card => card.id == cardLi.dataset.cardId).order = i++
+            vue.getCard(cardLi.dataset.cardId).order = i++
           })
           
           // remove from bucket
