@@ -44,15 +44,17 @@
       },
       cardComponent: {
         type: Object,
-        default: { 
-          template: `
-            <div>
-              <strong>{{ card.title }}</strong>
-              <div>{{ card.id }}</div>
-            </div>
-          `,
-          props: ['card']
-        }
+        default: function() {
+          return { 
+            template: `
+              <div>
+                <strong>{{ card.title }}</strong>
+                <div>{{ card.id }}</div>
+              </div>
+            `,
+            props: ['card']
+          }
+        } 
       }
     },
 
