@@ -32,7 +32,16 @@
   export default {
     name: 'KanbanBoard',
 
-    props: ['buckets'],
+    props: {
+      buckets: Object,
+      sorter: {
+        type: Function,
+        default: function(cardA, cardB){
+          // return negative value: A before B
+          return cardA.id - cardB.id
+        }
+      }
+    },
 
     mounted() {
       var self = this
@@ -52,10 +61,11 @@
           // remove from bucket
           self.buckets[oldBucketName] = oldBucket.filter(card => card.id != cardId)
 
-          // move it to new bucket
+          // move it to new bucket and sort it
           self.buckets[newBucketName].push(card)
+          self.buckets[newBucketName].sort(this.sorter)
 
-          this.$emit('update-card', card, newBucketName);
+          this.$emit('update-card', card, newBucketName)
 
           this.$set(card, 'class', 'is-moved')
 
@@ -64,7 +74,7 @@
           }, 600)
         })
         .on('dragend', (el) => {
-          el.classList.remove('is-moving');
+          el.classList.remove('is-moving')
         });
     },
   };
