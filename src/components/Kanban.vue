@@ -35,16 +35,29 @@
     props: ['buckets'],
 
     mounted() {
+      var self = this
       dragula(this.$refs.list)
         .on('drag', (el) => {
           el.classList.add('is-moving');
         })
         .on('drop', (el, target, source, sibling) => {
-          let index = 0;
-          for (index = 0; index < target.children.length; index += 1) {
-            if (target.children[index].classList.contains('is-moving')) break;
-          }
-          this.$emit('update-block', el.dataset.cardId, target.dataset.bucketName, index);
+          var cardId = el.dataset.cardId
+          var oldBucketName = source.dataset.bucketName
+          var oldBucket = self.buckets[source.dataset.bucketName]
+          var newBucketName = target.dataset.bucketName
+
+          // get card object
+          var card = oldBucket.find(card => card.id == cardId)
+
+          setTimeout(() => {
+            // remove from bucket
+            self.buckets[oldBucketName] = oldBucket.filter(card => card.id != cardId)
+
+            // move it to new bucket
+            self.buckets[newBucketName].push(card)
+
+            this.$emit('update-card', card, newBucketName);
+          }, 700)
         })
         .on('dragend', (el) => {
           el.classList.remove('is-moving');
