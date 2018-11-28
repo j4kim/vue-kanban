@@ -16,6 +16,8 @@ import faker from 'faker';
 import { debounce, random } from 'lodash';
 import Kanban from './components/Kanban';
 
+var i = 0
+
 export default {
   name: 'app',
   components: {
@@ -23,17 +25,18 @@ export default {
   },
   data() {
     return {
-      buckets: {}
+      buckets: {
+        "on-hold": [],
+        "in-progress": [],
+        "needs-review": [],
+        "approved": []
+    }
     }
   },
   created() {
-    var statuses = ['on-hold', 'in-progress', 'needs-review', 'approved']
-    statuses.forEach(status => {
-      this.buckets[status] = []
-    });
-    for (let i = 0; i <= 10; i += 1) {
-      let status = statuses[random(3)]
-      this.buckets[status].push({
+    for (i; i <= 10; i += 1) {
+      let bucketName = Object.keys(this.buckets)[random(3)]
+      this.buckets[bucketName].push({
         id: i,
         title: faker.company.bs(),
       });
