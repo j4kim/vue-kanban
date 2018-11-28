@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <section class="section">
-      <h4>
+      <h4 @click="addCard">
         Vue adoptation of Ettric's
         <a href="//codepen.io/ettrics/pen/QbPEeg">Codepen</a>
       </h4>
     </section>
-    <Kanban :buckets="buckets" @update-block="updateBlock">
+    <Kanban :buckets="buckets" @update-card="updateCard">
     </Kanban>
   </div>
 </template>
@@ -30,7 +30,7 @@ export default {
         "in-progress": [],
         "needs-review": [],
         "approved": []
-    }
+      }
     }
   },
   created() {
@@ -44,9 +44,13 @@ export default {
   },
 
   methods: {
-    updateBlock: function (id, status, index) {
-      console.log(id, status, index)
-    }
+    addCard() {
+      this.buckets['on-hold'].push({
+        id: i++,
+        title: faker.company.bs(),
+      });
+    },
+    updateCard: console.log
   },
 };
 </script>
