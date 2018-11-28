@@ -79,16 +79,18 @@
             vue.getCard(cardLi.dataset.cardId).order = i++
           })
           
-          // remove from bucket
-          oldBucket = oldBucket.filter(c => c.id != card.id)
+          if(oldBucketName !== newBucketName) {
+            // remove from bucket
+            oldBucket = oldBucket.filter(c => c.id != card.id)
 
-          // move card into new bucket and sort it
-          newBucket.push(card)
-          newBucket.sort(vue.sorter)
+            // move card into new bucket and sort it
+            newBucket.push(card)
+            newBucket.sort(vue.sorter)
 
-          // store updated buckets
-          vue.buckets[oldBucketName] = oldBucket
-          vue.buckets[newBucketName] = newBucket
+            // store updated buckets
+            vue.buckets[oldBucketName] = oldBucket
+            vue.buckets[newBucketName] = newBucket
+          }
 
           vue.$emit('update-card', card, newBucketName)
 
