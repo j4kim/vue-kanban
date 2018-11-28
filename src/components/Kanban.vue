@@ -53,7 +53,7 @@
     },
 
     mounted() {
-      var self = this
+      var vue = this
       dragula(this.$refs.list)
         .on('drag', (el) => {
           el.classList.add('is-moving');
@@ -61,9 +61,9 @@
         .on('drop', (el, targetUl, sourceUl, sibling) => {
           var cardId = el.dataset.cardId
           var oldBucketName = sourceUl.dataset.bucketName
-          var oldBucket = self.buckets[oldBucketName]
+          var oldBucket = vue.buckets[oldBucketName]
           var newBucketName = targetUl.dataset.bucketName
-          var newBucket = self.buckets[newBucketName]
+          var newBucket = vue.buckets[newBucketName]
 
           // get card object
           var card = oldBucket.find(card => card.id == cardId)
@@ -71,23 +71,24 @@
           // iterate over card elements in bucket to assign corresponding card object an order
           var i = 0
           Array.from(targetUl.children).forEach(cardLi => {
-            self.allCards.find(card => card.id == cardLi.dataset.cardId)
+            vue.allCards.find(card => card.id == cardLi.dataset.cardId).order = i++
           })
           
           // remove from bucket
-          self.buckets[oldBucketName] = oldBucket.filter(card => card.id != cardId)
+          vue.buckets[oldBucketName] = oldBucket.filter(card => card.id != cardId)
 
           // move card into new bucket and sort it
-          self.buckets[newBucketName].push(card)
-          self.buckets[newBucketName].sort(this.sorter)
+          vue.buckets[newBucketName].push(card)
+          vue.buckets[newBucketName].sort(vue.sorter)
 
-          this.$emit('update-card', card, newBucketName)
+          vue.$emit('update-card', card, newBucketName)
 
-          this.$set(card, 'class', 'is-moved')
+          vue.$set(card, 'class', 'is-moved')
 
           setTimeout(() => {
-            this.$set(card, 'class', '')
+            vue.$set(card, 'class', '')
           }, 600)
+
         })
         .on('dragend', (el) => {
           el.classList.remove('is-moving')
