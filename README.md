@@ -1,89 +1,113 @@
-# vue-kanban [![Build Status](https://travis-ci.org/BrockReece/vue-kanban.svg?branch=master)](https://travis-ci.org/BrockReece/vue-kanban) [![npm version](https://badge.fury.io/js/vue-kanban.svg)](https://badge.fury.io/js/vue-kanban)
+# vue-kanban
 
-> A drag and drop kanban board component
+> A fork of [vue-kanban](https://github.com/BrockReece/vue-kanban) that makes the input data reactive and allows custom sorting.
 
-### [Demo](https://brockreece.github.io/vue-kanban/)
+### [Demo](https://j4kim.github.io/vue-kanban/)
+
+### Vocabulary difference with the original project
+
+stage -> bucket  
+status -> bucket name  
+block -> card
 
 ### Installation
 
-Add vue-kanban to your project with npm
-``` bash
-npm install vue-kanban 
+This is not a distributed npm package.
+You can use the component by cloning the repos and copying the `Kanban.vue` and `kanban.scss` files.
+
+To deploy the demo locally, run
+```bash
+npm install
 ```
 
-... or yarn
+And then serve it using
 ```bash
-yarn add vue-kanban
+npm run dev
 ```
+
+### 
 
 ### Basic Usage
-
-Install the plugin
+Import and register the `Kanban.vue` component
 ```js
-import vueKanban from 'vue-kanban'
-
-Vue.use(vueKanban)
+import Kanban from './components/Kanban'
+...
+components: { Kanban }
 ```
 
-and then use the component in your project.
+then simply use it.
 ```html
-<kanban-board :stages="stages" :blocks="blocks"></kanban-board>
+<Kanban :buckets="buckets" />
 ```
 
-#### Props
-- stages: an array of stages for the kanban board
-- blocks: an array of objects that will make up the blocks on the kanban board
+The `buckets` property expects an oject containing the
+list names as keys and arrays of "card" objects as values.
 ```js
 {
-  stages: ['on-hold', 'in-progress', 'needs-review', 'approved'],
-  blocks: [
-    {
-      id: 1,
-      status: 'on-hold',
-      title: 'Test',
-    },
-  ],
+  buckets: {
+    'on-hold': [
+      {
+        id: 1,
+        title: 'Test',
+      }
+    ],
+    'in-progress': [],
+    'needs-review': [],
+    'approved': []
+    }
 }
 ```
 
+The `buckets` object is altered when a card is moved,
+this is the major difference with the original component by @BrockReece.
+
 ### Receiving Changes
-The component will emit an event when a block is moved
+The component will emit an event when a card is moved
 
 ```html
-<kanban-board :stages="stages" :blocks="blocks" @update-block="updateBlock"></kanban-board>
+<Kanban :buckets="buckets" @update-card="updateCard" />
+
 <script>
 ...
   methods: {
-    updateBlock(id, status) {
-      this.blocks.find(b => b.id === Number(id)).status = status;
+    updateCard(card, bucketName) {
+      console.log("card " + card.id + " was moved to bucket " + bucketName)
     },
   },
 ...
 </script>
 ```
 
-### Add some style
-I have included a scss stylesheet in this repo as a starting point that can be used in your project
+### Customize the kanban cards
+You can pass a `cardComponent` property to the Kanban component
+
 ```html
-<style lang="scss">
-  @import './assets/kanban.scss';
-</style>
+<Kanban :buckets="buckets" :card-component="cardComponent" />
 ```
 
-### Customize the kanban blocks
-Each block has a named slot which can be extended from the parent, like so...
-```html
-<kanban-board :stages="stages" :blocks="blocks" @update-block="updateBlock">
-  <div v-for="stage in stages" :slot="stage">
-    <h2>{{ stage }}</h2>
-  </div>
-  <div v-for="block in blocks" :slot="block.id">
-    <div>
-      <strong>id:</strong> {{ block.id }}
-    </div>
-    <div>
-      {{ block.title }}
-    </div>
-  </div>
-</kanban-board>
+`cardComponent` contains a Vue component object. This component will receive a `card` property, containing the card object.
+```js
+{
+  cardComponent: { 
+    template: `
+      <div>
+        Custom card
+        <i>{{ card.title }}</i>
+      </div>
+    `,
+    props: ['card']
+  }
+}
 ```
+
+
+### Sort
+
+When a card is moved from a bucket to another, the order of this new bucket is stored in the card objects, in an `order` property. Then, the original `buckets` object is altered to be consistent with the real order of the cards in the buckets.
+
+You can pass a [comparison function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Description) in the `sorter` prop to the Kanban component to change this behavior.
+For example, here we will reorder the card by `id` descending when a card is moved in a bucket :
+```html
+<Kanban :buckets="buckets" :sorter="(cardA, cardB) => cardB.id - cardA.id" />
+```
+
