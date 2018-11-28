@@ -1,9 +1,8 @@
 <template>
   <div id="app">
     <section class="section">
-      <h4 @click="addCard">
-        Vue adoptation of Ettric's
-        <a href="//codepen.io/ettrics/pen/QbPEeg">Codepen</a>
+      <h4>
+        usage example of <a href="https://github.com/j4kim/vue-kanban">J4kim's fork</a> of <a href="https://github.com/BrockReece/vue-kanban">BrockReece' vue-kanban</a>
       </h4>
     </section>
     <Kanban :buckets="buckets" @update-card="updateCard" :card-component="cardComponent">
