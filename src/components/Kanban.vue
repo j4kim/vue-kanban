@@ -43,6 +43,15 @@
       }
     },
 
+    computed: {
+      allCards: function() {
+        return Object.values(this.buckets)
+          .reduce((arr1, arr2) => {
+            return arr1.concat(arr2)
+          })
+      }
+    },
+
     mounted() {
       var self = this
       dragula(this.$refs.list)
@@ -58,20 +67,15 @@
 
           // get card object
           var card = oldBucket.find(card => card.id == cardId)
-          
-          // remove from bucket
-          self.buckets[oldBucketName] = oldBucket.filter(card => card.id != cardId)
 
           // iterate over card elements in bucket to assign corresponding card object an order
           var i = 0
           Array.from(targetUl.children).forEach(cardLi => {
-            let cardInBucket = newBucket.find(card => card.id == cardLi.dataset.cardId)
-            if(cardInBucket){
-              cardInBucket.order = i++
-            } else {
-              card.order = i++
-            }
+            self.allCards.find(card => card.id == cardLi.dataset.cardId)
           })
+          
+          // remove from bucket
+          self.buckets[oldBucketName] = oldBucket.filter(card => card.id != cardId)
 
           // move card into new bucket and sort it
           self.buckets[newBucketName].push(card)
