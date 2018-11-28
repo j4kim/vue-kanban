@@ -19,7 +19,7 @@
             v-for="card in cards" :key="card.id"
             :data-card-id="card.id"
           >
-            <card-component :card="card" />
+            <component :is="cardComponent" :card="card" />
           </li>
         </ul>
       </li>
@@ -29,7 +29,6 @@
 
 <script>
   import dragula from 'dragula';
-  import Vue from 'vue';
 
   export default {
     name: 'KanbanBoard',
@@ -55,10 +54,6 @@
           props: ['card']
         }
       }
-    },
-
-    created () {
-      Vue.component('card-component', this.cardComponent)
     },
 
     computed: {
