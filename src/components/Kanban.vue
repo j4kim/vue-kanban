@@ -65,14 +65,13 @@
           el.classList.add('is-moving');
         })
         .on('drop', (el, targetUl, sourceUl, sibling) => {
-          var cardId = el.dataset.cardId
           var oldBucketName = sourceUl.dataset.bucketName
           var oldBucket = vue.buckets[oldBucketName]
           var newBucketName = targetUl.dataset.bucketName
           var newBucket = vue.buckets[newBucketName]
 
           // get card object
-          var card = oldBucket.find(card => card.id == cardId)
+          var card = vue.getCard(el.dataset.cardId)
 
           // iterate over card elements in bucket to assign corresponding card object an order
           var i = 0
@@ -81,11 +80,15 @@
           })
           
           // remove from bucket
-          vue.buckets[oldBucketName] = oldBucket.filter(card => card.id != cardId)
+          oldBucket = oldBucket.filter(c => c.id != card.id)
 
           // move card into new bucket and sort it
-          vue.buckets[newBucketName].push(card)
-          vue.buckets[newBucketName].sort(vue.sorter)
+          newBucket.push(card)
+          newBucket.sort(vue.sorter)
+
+          // store updated buckets
+          vue.buckets[oldBucketName] = oldBucket
+          vue.buckets[newBucketName] = newBucket
 
           vue.$emit('update-card', card, newBucketName)
 
