@@ -6,6 +6,12 @@
       </h4>
     </section>
     <Kanban :buckets="buckets" @update-card="updateCard" :card-component="cardComponent">
+      <div slot="on-hold" >
+        <h2>
+          On hold
+          <a style="cursor:pointer" @click="addCard">+</a>
+        </h2>
+      </div>
     </Kanban>
   </div>
 </template>
