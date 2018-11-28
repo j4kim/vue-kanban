@@ -14,11 +14,12 @@
         </span>
         <div class="drag-options"></div>
         <ul class="drag-inner-list" ref="list" :data-bucket-name="bucketName">
-          <li class="drag-item" :class="card.class" v-for="card in cards" :data-card-id="card.id" :key="card.id">
-            <slot :name="card.id">
-              <strong>{{ card.title }}</strong>
-              <div>{{ card.id }}</div>
-            </slot>
+          <li class="drag-item"
+            :class="card.class"
+            v-for="card in cards" :key="card.id"
+            :data-card-id="card.id"
+          >
+            <card-component :card="card" />
           </li>
         </ul>
       </li>
@@ -28,6 +29,7 @@
 
 <script>
   import dragula from 'dragula';
+  import Vue from 'vue';
 
   export default {
     name: 'KanbanBoard',
@@ -40,7 +42,23 @@
           // return negative value: A before B
           return cardA.order - cardB.order
         }
+      },
+      cardComponent: {
+        type: Object,
+        default: { 
+          template: `
+            <div>
+              <strong>{{ card.title }}</strong>
+              <div>{{ card.id }}</div>
+            </div>
+          `,
+          props: ['card']
+        }
       }
+    },
+
+    created () {
+      Vue.component('card-component', this.cardComponent)
     },
 
     computed: {

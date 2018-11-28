@@ -6,7 +6,7 @@
         <a href="//codepen.io/ettrics/pen/QbPEeg">Codepen</a>
       </h4>
     </section>
-    <Kanban :buckets="buckets" @update-card="updateCard">
+    <Kanban :buckets="buckets" @update-card="updateCard" :card-component="cardComponent">
     </Kanban>
   </div>
 </template>
@@ -15,6 +15,7 @@
 import faker from 'faker';
 import { debounce, random } from 'lodash';
 import Kanban from './components/Kanban';
+import cardComponent from './components/Card';
 
 var i = 0
 
@@ -30,7 +31,8 @@ export default {
         "in-progress": [],
         "needs-review": [],
         "approved": []
-      }
+      },
+      cardComponent
     }
   },
   created() {
