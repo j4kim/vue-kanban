@@ -14,7 +14,7 @@
         </span>
         <div class="drag-options"></div>
         <ul class="drag-inner-list" ref="list" :data-bucket-name="bucketName">
-          <li class="drag-item" v-for="card in cards" :data-card-id="card.id" :key="card.id">
+          <li class="drag-item" :class="card.class" v-for="card in cards" :data-card-id="card.id" :key="card.id">
             <slot :name="card.id">
               <strong>{{ card.title }}</strong>
               <div>{{ card.id }}</div>
@@ -48,26 +48,23 @@
 
           // get card object
           var card = oldBucket.find(card => card.id == cardId)
+          
+          // remove from bucket
+          self.buckets[oldBucketName] = oldBucket.filter(card => card.id != cardId)
+
+          // move it to new bucket
+          self.buckets[newBucketName].push(card)
+
+          this.$emit('update-card', card, newBucketName);
+
+          this.$set(card, 'class', 'is-moved')
 
           setTimeout(() => {
-            // remove from bucket
-            self.buckets[oldBucketName] = oldBucket.filter(card => card.id != cardId)
-
-            // move it to new bucket
-            self.buckets[newBucketName].push(card)
-
-            this.$emit('update-card', card, newBucketName);
-          }, 700)
+            this.$set(card, 'class', '')
+          }, 600)
         })
         .on('dragend', (el) => {
           el.classList.remove('is-moving');
-
-          window.setTimeout(() => {
-            el.classList.add('is-moved');
-            window.setTimeout(() => {
-              el.classList.remove('is-moved');
-            }, 600);
-          }, 100);
         });
     },
   };
