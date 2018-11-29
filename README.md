@@ -12,9 +12,6 @@ block -> card
 
 ### Installation
 
-This is not a distributed npm package.
-You can use the component by cloning the repos and copying the `Kanban.vue` and `kanban.scss` files.
-
 To deploy the demo locally, run
 ```bash
 npm install
@@ -24,6 +21,9 @@ And then serve it using
 ```bash
 npm run dev
 ```
+
+This is not a distributed npm package.
+You can use the component by copying the `Kanban.vue` and `kanban.scss` files.
 
 ### 
 
