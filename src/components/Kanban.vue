@@ -19,7 +19,11 @@
             v-for="card in cards" :key="card.id"
             :data-card-id="card.id"
           >
-            <component :is="cardComponent" :card="card" />
+            <component v-if="cardComponent" :is="cardComponent" :card="card"/>
+            <div v-else>
+                <strong>{{ card.title }}</strong>
+                <div>{{ card.id }}</div>
+            </div>
           </li>
         </ul>
       </li>
@@ -42,20 +46,7 @@
           return cardA.order - cardB.order
         }
       },
-      cardComponent: {
-        type: Object,
-        default: function() {
-          return { 
-            template: `
-              <div>
-                <strong>{{ card.title }}</strong>
-                <div>{{ card.id }}</div>
-              </div>
-            `,
-            props: ['card']
-          }
-        } 
-      }
+      cardComponent: Object
     },
 
     computed: {
