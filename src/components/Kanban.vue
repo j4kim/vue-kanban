@@ -18,6 +18,7 @@
             :class="card.class"
             v-for="card in cards" :key="card.id"
             :data-card-id="card.id"
+            @click="$emit('click-card', card, bucketName)"
           >
             <component v-if="cardComponent" :is="cardComponent" :card="card"/>
             <div v-else>

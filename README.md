@@ -61,8 +61,12 @@ list names as keys and arrays of "card" objects as values.
 The `buckets` object is altered when a card is moved,
 this is the major difference with the original component by @BrockReece.
 
-### Receiving Changes
-The component will emit an event when a card is moved
+### Events
+The component will emit these events:
+- `update-card` when a card is moved
+- `click-card` when a card is clicked
+
+Both events have the card object and the bucket name as arguments.
 
 ```html
 <Kanban :buckets="buckets" @update-card="updateCard" />
